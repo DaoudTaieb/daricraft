@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <style>
+      .stroke { fill: none; stroke: #0b0b0b; stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; }
+      .fill { fill: #0b0b0b; }
+      .wordmark { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif; font-weight: 700; letter-spacing: 18px; }
+      .tagline { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif; font-weight: 500; letter-spacing: 14px; }
+    </style>
+  </defs>
+
+  <!-- Simple mark inspired by provided logo -->
+  <g transform="translate(250,80)">
+    <!-- roof -->
+    <path class="stroke" d="M70 260 L300 70 L530 260" />
+    <!-- chimney -->
+    <path class="stroke" d="M440 120 L440 40 L510 40 L510 170" />
+    <!-- walls -->
+    <path class="stroke" d="M140 250 L110 520" />
+    <path class="stroke" d="M490 250 L520 520" />
+    <!-- eaves -->
+    <path class="stroke" d="M70 260 L0 320" />
+    <path class="stroke" d="M530 260 L600 320" />
+
+    <!-- window -->
+    <rect class="fill" x="290" y="240" width="45" height="45" rx="2" />
+    <rect class="fill" x="345" y="240" width="45" height="45" rx="2" />
+    <rect class="fill" x="290" y="295" width="45" height="45" rx="2" />
+    <rect class="fill" x="345" y="295" width="45" height="45" rx="2" />
+
+    <!-- table -->
+    <path class="stroke" d="M210 410 H390" />
+    <path class="stroke" d="M300 410 V560" />
+    <path class="stroke" d="M250 560 H350" />
+
+    <!-- left chair -->
+    <path class="stroke" d="M110 440 H220" />
+    <path class="stroke" d="M120 440 V560" />
+    <path class="stroke" d="M210 440 V560" />
+    <path class="stroke" d="M120 500 L210 560" />
+
+    <!-- right chair -->
+    <path class="stroke" d="M380 440 H490" />
+    <path class="stroke" d="M390 440 V560" />
+    <path class="stroke" d="M480 440 V560" />
+    <path class="stroke" d="M390 560 L480 500" />
+  </g>
+
+  <!-- Wordmark -->
+  <text x="600" y="690" text-anchor="middle" font-size="92" class="wordmark fill">DARI CRAFT</text>
+  <text x="600" y="758" text-anchor="middle" font-size="40" class="tagline fill">L&apos;ESPRIT DU DESIGN</text>
+</svg>
