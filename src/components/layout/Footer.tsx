@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
-import { readSiteSettings } from "@/lib/siteSettingsStore.server";
+import { readSiteSettings, DEFAULT_SITE_SETTINGS } from "@/lib/siteSettingsStore.server";
 
 export async function Footer() {
     const settings = await readSiteSettings();
