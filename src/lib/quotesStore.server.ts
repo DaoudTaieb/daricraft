@@ -14,6 +14,9 @@ export type StoredQuote = {
   details: string;
   productSlug?: string;
   status: QuoteStatus;
+  images?: string[];
+  replyMessage?: string;
+  replyImages?: string[];
   createdAt: string;
 };
 
@@ -62,6 +65,13 @@ function toXml(quotes: StoredQuote[]): string {
         phone: q.phone,
         type: q.type,
         details: q.details,
+        images: {
+          image: q.images ?? [],
+        },
+        replyMessage: q.replyMessage ?? "",
+        replyImages: {
+          image: q.replyImages ?? [],
+        },
       })),
     },
   });
@@ -82,8 +92,11 @@ function fromXml(raw: string): StoredQuote[] {
       const phone = String(n?.phone ?? "").trim();
       const type = String(n?.type ?? "").trim();
       const details = String(n?.details ?? "").trim();
+      const images = normalizeArray(n?.images?.image).map((x) => String(x));
+      const replyMessage = String(n?.replyMessage ?? "").trim();
+      const replyImages = normalizeArray(n?.replyImages?.image).map((x) => String(x));
       if (!id || !name || !email) continue;
-      out.push({ id, createdAt, status, productSlug, name, email, phone, type, details });
+      out.push({ id, createdAt, status, productSlug, name, email, phone, type, details, images, replyMessage, replyImages });
     }
     return out;
   } catch {
@@ -124,6 +137,7 @@ export async function createQuote(input: {
   type: string;
   details: string;
   productSlug?: string;
+  images?: string[];
 }): Promise<StoredQuote> {
   const quote: StoredQuote = {
     id: crypto.randomUUID(),
@@ -135,9 +149,21 @@ export async function createQuote(input: {
     phone: input.phone.trim(),
     type: input.type.trim(),
     details: input.details.trim(),
+    images: input.images ?? [],
   };
   const current = await readQuotes();
   await writeQuotes([quote, ...current]);
   return quote;
+}
+
+export async function updateQuoteReply(id: string, replyMessage: string, replyImages: string[]): Promise<StoredQuote | null> {
+  const current = await readQuotes();
+  const idx = current.findIndex(q => q.id === id);
+  if (idx === -1) return null;
+  current[idx].status = "COMPLETED";
+  current[idx].replyMessage = replyMessage.trim();
+  current[idx].replyImages = replyImages;
+  await writeQuotes(current);
+  return current[idx];
 }
 

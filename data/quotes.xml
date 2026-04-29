@@ -1,1 +1,60 @@
-<quotes/>
+<quotes>
+  <quote id="4b2c0794-52af-4e3f-ba31-f4c2e743259a" status="COMPLETED" createdAt="2026-04-29T21:31:46.379Z" productSlug="">
+    <name>Daoud Taieb</name>
+    <email>taiebdaoud3@gmail.com</email>
+    <phone>44134396</phone>
+    <type>Cuisine domestique</type>
+    <details>t</details>
+    <images>
+      <image>/uploads/8e625766-5735-4dca-b06e-e673c59d871a.jpg</image>
+    </images>
+    <replyMessage>aaa</replyMessage>
+    <replyImages></replyImages>
+  </quote>
+  <quote id="1cf708e1-7e3f-4f36-ba47-2b52f17bc935" status="PENDING" createdAt="2026-04-29T21:28:50.739Z" productSlug="">
+    <name>Daoud Taieb</name>
+    <email>taiebdaoud3@gmail.com</email>
+    <phone>28173340</phone>
+    <type>Cuisine domestique</type>
+    <details>ttttttttt</details>
+    <images>
+      <image>/uploads/02287dad-6b8e-4244-b00d-91ae73a739d2.jpeg</image>
+      <image>/uploads/9a87a560-ac37-409e-bf03-fa853ef52f6c.jpeg</image>
+      <image>/uploads/1d63dacf-9f0b-46be-bb13-04cdc283d65b.jpeg</image>
+      <image>/uploads/386d4372-40ae-465d-af52-ec2b7374fd5a.jpeg</image>
+      <image>/uploads/f5f254c6-9d0f-4a4b-ab1f-9ea609279b67.jpeg</image>
+      <image>/uploads/b3e15cb1-bd44-4156-a964-e241af5a2dcd.jpeg</image>
+    </images>
+    <replyMessage></replyMessage>
+    <replyImages></replyImages>
+  </quote>
+  <quote id="142a533f-c361-44ff-8ba4-da86d0b7940a" status="PENDING" createdAt="2026-04-29T21:19:24.704Z" productSlug="">
+    <name>taha cherif a</name>
+    <email>tahacherid07@gmail.com</email>
+    <phone>28173340</phone>
+    <type>Cuisine domestique</type>
+    <details>tt</details>
+    <images>
+      <image>/uploads/4c3e1c33-c4f5-4c9b-bed3-85a0b703c6b8.jpg</image>
+      <image>/uploads/41c51485-a3b9-4d7d-875f-ff96b5eb844b.jpg</image>
+      <image>/uploads/6506dbb6-9127-4ebb-8964-da39e02ada9f.jpg</image>
+      <image>/uploads/1df9cdca-969a-4153-bd2e-7fcfc7291468.jpg</image>
+    </images>
+    <replyMessage></replyMessage>
+    <replyImages></replyImages>
+  </quote>
+  <quote id="7d765e80-4a60-42a5-bf50-200c56b0bdec" status="COMPLETED" createdAt="2026-04-29T21:11:34.704Z" productSlug="">
+    <name>Daoud Taieb</name>
+    <email>taiebdaoud3@gmail.com</email>
+    <phone>44134396</phone>
+    <type>Cuisine domestique</type>
+    <details>tt</details>
+    <images>
+      <image>/uploads/39a8976d-ec74-4c19-bf46-85ca7b0b8e9f.jpg</image>
+    </images>
+    <replyMessage>ttttttttttttt</replyMessage>
+    <replyImages>
+      <image>/uploads/4029ce83-b3c2-41fc-9721-4d28139a9cf7.png</image>
+    </replyImages>
+  </quote>
+</quotes>

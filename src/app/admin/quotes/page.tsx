@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, Mail, Phone, CheckCircle, Clock } from "lucide-react";
+import { Eye, Mail, Phone, CheckCircle, Clock, Paperclip } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { StoredQuote } from "@/lib/quotesStore.server";
 
@@ -16,7 +16,7 @@ export default function AdminQuotesPage() {
                 const res = await fetch("/api/quotes");
                 const json = await res.json();
                 if (!active) return;
-                setQuotes(Array.isArray(json?.quotes) ? json.quotes : []);
+                setQuotes(Array.isArray(json?.quotes) ? json.quotes.filter((q: any) => q.type !== "Cuisine domestique") : []);
             } finally {
                 if (active) setLoading(false);
             }
@@ -38,8 +38,8 @@ export default function AdminQuotesPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-3xl font-bold tracking-tight">Devis & Demandes</h1>
-                <p className="text-muted-foreground">Suivi des projets clients</p>
+                <h1 className="text-3xl font-bold tracking-tight">Devis Sur Mesure</h1>
+                <p className="text-muted-foreground">Suivi des projets classiques et mobilier</p>
             </div>
 
             <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
@@ -80,6 +80,11 @@ export default function AdminQuotesPage() {
                                         <div className="text-xs text-muted-foreground truncate max-w-[260px]" title={quote.details}>
                                             {quote.details}
                                         </div>
+                                        {quote.images && quote.images.length > 0 && (
+                                            <div className="mt-2 text-xs font-semibold text-secondary flex items-center gap-1">
+                                                <Paperclip size={12} /> {quote.images.length} pièce(s) jointe(s)
+                                            </div>
+                                        )}
                                     </td>
                                     <td className="p-4 text-muted-foreground">
                                         {new Date(quote.createdAt).toLocaleString("fr-FR")}
@@ -142,6 +147,26 @@ export default function AdminQuotesPage() {
                                 <div className="text-xs uppercase tracking-wider text-muted-foreground">Détails</div>
                                 <p className="mt-2 whitespace-pre-wrap leading-relaxed">{selected.details}</p>
                             </div>
+                            
+                            {selected.images && selected.images.length > 0 && (
+                                <div className="rounded-xl bg-muted/40 p-3">
+                                    <div className="text-xs uppercase tracking-wider text-muted-foreground mb-3">Pièces jointes</div>
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                        {selected.images.map((imgUrl, idx) => (
+                                            <a 
+                                                key={idx} 
+                                                href={imgUrl} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer" 
+                                                className="block aspect-square rounded-lg overflow-hidden border border-border shadow-sm hover:ring-2 hover:ring-primary transition-all"
+                                                title={`Ouvrir l'image ${idx + 1}`}
+                                            >
+                                                <img src={imgUrl} alt={`Pièce jointe ${idx + 1}`} className="w-full h-full object-cover" />
+                                            </a>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

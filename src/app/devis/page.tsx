@@ -32,7 +32,7 @@ function DevisForm() {
         details: initialDetails
     });
 
-    const [submitted, setSubmitted] = useState(false);
+    const [submittedId, setSubmittedId] = useState<string | null>(null);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [submitting, setSubmitting] = useState(false);
 
@@ -94,7 +94,7 @@ function DevisForm() {
                 setSubmitError(json?.error ?? "Erreur lors de l'envoi.");
                 return;
             }
-            setSubmitted(true);
+            setSubmittedId(json.quote?.id || "INCONNU");
         } catch {
             setSubmitError("Erreur réseau.");
         } finally {
@@ -102,22 +102,29 @@ function DevisForm() {
         }
     };
 
-    if (submitted) {
+    if (submittedId) {
+        const shortId = submittedId.split('-')[0].toUpperCase();
         return (
             <div className="min-h-[80vh] flex items-center justify-center bg-background px-4 sm:px-6">
                 <div className="max-w-md w-full text-center space-y-6">
-                    <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto">
+                    <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto shadow-sm">
                         <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                     </div>
                     <h2 className="text-3xl font-bold">Demande envoyée !</h2>
                     <p className="text-muted-foreground">
-                        Merci {formData.name}. Nous avons bien reçu votre demande. Notre équipe vous contactera sous 24h pour discuter de votre projet.
+                        Merci {formData.name}. Nous avons bien reçu votre demande.
                     </p>
+                    
+                    <div className="bg-muted/50 p-6 rounded-2xl my-6 border border-border shadow-sm">
+                        <p className="text-sm font-medium text-muted-foreground">Suivez votre projet dans l'<strong>Espace Client</strong> avec votre numéro de téléphone :</p>
+                        <div className="text-2xl font-bold text-primary mt-2">{formData.phone}</div>
+                    </div>
+
                     <button
-                        onClick={() => setSubmitted(false)}
-                        className="text-primary font-medium underline hover:text-secondary"
+                        onClick={() => setSubmittedId(null)}
+                        className="text-primary font-medium underline hover:text-secondary block mx-auto mt-4"
                     >
                         Envoyer une autre demande
                     </button>

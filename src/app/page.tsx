@@ -23,10 +23,11 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { title: "Mobilier", image: "https://images.unsplash.com/photo-1592078615290-033ee584e267?auto=format&fit=crop&q=80&w=1000", href: "/mobilier" },
               { title: "Décoration", image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=1000", href: "/decoration" },
+              { title: "Cuisine domestique", image: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=1000", href: "/cuisine-domestique" },
               { title: "Sur Mesure", image: "https://images.unsplash.com/photo-1604014237800-1c9102c219da?auto=format&fit=crop&q=80&w=1000", href: "/sur-mesure" }
             ].map((cat, idx) => (
               <Link key={idx} href={cat.href} className="group relative h-[320px] sm:h-[380px] md:h-[400px] overflow-hidden rounded-lg shadow-lg">

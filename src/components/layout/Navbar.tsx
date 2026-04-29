@@ -13,7 +13,9 @@ const navLinks = [
   { name: "Accueil", href: "/" },
   { name: "Mobilier", href: "/mobilier", mega: "mobilier" as const },
   { name: "Décoration", href: "/decoration", mega: "decoration" as const },
+  { name: "Cuisine domestique", href: "/cuisine-domestique" },
   { name: "Sur Mesure", href: "/sur-mesure" },
+  { name: "Espace Client", href: "/suivi" },
 ];
 
 export function Navbar() {
