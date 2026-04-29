@@ -1,7 +1,5 @@
-import { promises as fs } from "fs";
-import path from "path";
+import { kv } from "@vercel/kv";
 import crypto from "crypto";
-import { XMLBuilder, XMLParser } from "fast-xml-parser";
 
 export type QuoteStatus = "PENDING" | "CONTACTED" | "COMPLETED";
 
@@ -20,114 +18,20 @@ export type StoredQuote = {
   createdAt: string;
 };
 
-const DATA_DIR = path.join(process.cwd(), "data");
-const QUOTES_XML = path.join(DATA_DIR, "quotes.xml");
+const KV_KEY = "daricraft_quotes";
 
-let quotesCache: { mtimeMs: number; value: StoredQuote[] } | null = null;
-
-const xmlParser = new XMLParser({
-  ignoreAttributes: false,
-  attributeNamePrefix: "@_",
-  trimValues: true,
-  parseTagValue: false,
-});
-
-const xmlBuilder = new XMLBuilder({
-  ignoreAttributes: false,
-  attributeNamePrefix: "@_",
-  format: true,
-});
-
-async function exists(p: string) {
+export async function readQuotes(): Promise<StoredQuote[]> {
   try {
-    await fs.access(p);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function normalizeArray<T>(v: T | T[] | undefined | null): T[] {
-  if (!v) return [];
-  return Array.isArray(v) ? v : [v];
-}
-
-function toXml(quotes: StoredQuote[]): string {
-  return xmlBuilder.build({
-    quotes: {
-      quote: quotes.map((q) => ({
-        "@_id": q.id,
-        "@_status": q.status,
-        "@_createdAt": q.createdAt,
-        "@_productSlug": q.productSlug ?? "",
-        name: q.name,
-        email: q.email,
-        phone: q.phone,
-        type: q.type,
-        details: q.details,
-        images: {
-          image: q.images ?? [],
-        },
-        replyMessage: q.replyMessage ?? "",
-        replyImages: {
-          image: q.replyImages ?? [],
-        },
-      })),
-    },
-  });
-}
-
-function fromXml(raw: string): StoredQuote[] {
-  try {
-    const parsed = xmlParser.parse(raw) as any;
-    const nodes = normalizeArray(parsed?.quotes?.quote);
-    const out: StoredQuote[] = [];
-    for (const n of nodes) {
-      const id = String(n?.["@_id"] ?? "").trim();
-      const createdAt = String(n?.["@_createdAt"] ?? "").trim() || new Date().toISOString();
-      const status = (String(n?.["@_status"] ?? "PENDING").trim() as QuoteStatus) || "PENDING";
-      const productSlug = String(n?.["@_productSlug"] ?? "").trim() || undefined;
-      const name = String(n?.name ?? "").trim();
-      const email = String(n?.email ?? "").trim();
-      const phone = String(n?.phone ?? "").trim();
-      const type = String(n?.type ?? "").trim();
-      const details = String(n?.details ?? "").trim();
-      const images = normalizeArray(n?.images?.image).map((x) => String(x));
-      const replyMessage = String(n?.replyMessage ?? "").trim();
-      const replyImages = normalizeArray(n?.replyImages?.image).map((x) => String(x));
-      if (!id || !name || !email) continue;
-      out.push({ id, createdAt, status, productSlug, name, email, phone, type, details, images, replyMessage, replyImages });
-    }
-    return out;
-  } catch {
+    const quotes = await kv.get<StoredQuote[]>(KV_KEY);
+    return quotes || [];
+  } catch (error) {
+    console.error("KV Read Error:", error);
     return [];
   }
 }
 
-async function ensureQuotesFile() {
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  if (!(await exists(QUOTES_XML))) {
-    await fs.writeFile(QUOTES_XML, toXml([]), "utf8");
-    const st = await fs.stat(QUOTES_XML);
-    quotesCache = { mtimeMs: st.mtimeMs, value: [] };
-  }
-}
-
-export async function readQuotes(): Promise<StoredQuote[]> {
-  await ensureQuotesFile();
-  const st = await fs.stat(QUOTES_XML);
-  if (quotesCache && quotesCache.mtimeMs === st.mtimeMs) return quotesCache.value;
-  const raw = await fs.readFile(QUOTES_XML, "utf8");
-  const value = fromXml(raw);
-  quotesCache = { mtimeMs: st.mtimeMs, value };
-  return value;
-}
-
 export async function writeQuotes(quotes: StoredQuote[]): Promise<void> {
-  await ensureQuotesFile();
-  await fs.writeFile(QUOTES_XML, toXml(quotes), "utf8");
-  const st = await fs.stat(QUOTES_XML);
-  quotesCache = { mtimeMs: st.mtimeMs, value: quotes };
+  await kv.set(KV_KEY, quotes);
 }
 
 export async function createQuote(input: {
@@ -166,4 +70,3 @@ export async function updateQuoteReply(id: string, replyMessage: string, replyIm
   await writeQuotes(current);
   return current[idx];
 }
-

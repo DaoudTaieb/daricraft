@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { createQuote, readQuotes } from "@/lib/quotesStore.server";
-import { promises as fs } from "fs";
-import path from "path";
+import { put } from "@vercel/blob";
 import crypto from "crypto";
 
 export const runtime = "nodejs";
@@ -26,19 +25,18 @@ export async function POST(req: Request) {
     type = String(formData.get("type") ?? "Cuisine domestique").trim();
     details = String(formData.get("details") ?? "").trim();
 
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
-    await fs.mkdir(uploadDir, { recursive: true });
-
     for (const [key, value] of formData.entries()) {
       if (key === "images" && value instanceof Blob) {
         const file = value as File;
         if (file.size > 0) {
-          const buffer = Buffer.from(await file.arrayBuffer());
           const ext = file.name.split('.').pop() || "png";
           const fileName = `${crypto.randomUUID()}.${ext}`;
-          const filePath = path.join(uploadDir, fileName);
-          await fs.writeFile(filePath, buffer);
-          images.push(`/uploads/${fileName}`);
+          
+          // Envoi vers Vercel Blob
+          const blob = await put(`quotes/${fileName}`, file, {
+            access: 'public',
+          });
+          images.push(blob.url);
         }
       }
     }
@@ -61,4 +59,3 @@ export async function POST(req: Request) {
   const quote = await createQuote({ name, email, phone, type, details, productSlug, images });
   return NextResponse.json({ quote }, { status: 201 });
 }
-

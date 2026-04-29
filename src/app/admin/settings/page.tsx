@@ -220,6 +220,64 @@ export default function AdminSettingsPage() {
             </div>
           </div>
         </section>
+
+        <section className="space-y-6 pt-6 border-t border-border">
+          <h2 className="text-lg font-semibold">Bas de page (Footer)</h2>
+          
+          <div className="space-y-4">
+            <label className="text-sm font-medium">Logo du footer</label>
+            <div className="flex items-center gap-6">
+              <div className="w-32 h-16 bg-muted rounded-lg border border-border flex items-center justify-center overflow-hidden">
+                {draft.footer?.logoUrl ? (
+                  <img src={draft.footer.logoUrl} alt="Logo Preview" className="max-w-full max-h-full object-contain" />
+                ) : (
+                  <span className="text-[10px] text-muted-foreground uppercase">Pas de logo</span>
+                )}
+              </div>
+              <input
+                type="file"
+                id="logo-upload"
+                className="hidden"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  const formData = new FormData();
+                  formData.append("file", file);
+                  try {
+                    const res = await fetch("/api/settings/upload", { method: "POST", body: formData });
+                    const json = await res.json();
+                    if (json.url) {
+                      setDraft(s => ({ ...s, footer: { ...s.footer, logoUrl: json.url } }));
+                    }
+                  } catch (err) {
+                    alert("Erreur lors de l'upload du logo");
+                  }
+                }}
+              />
+              <label
+                htmlFor="logo-upload"
+                className="px-4 py-2 bg-secondary text-primary font-medium text-sm rounded-lg hover:bg-secondary/80 cursor-pointer transition-colors"
+              >
+                Changer le logo
+              </label>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Description du footer</label>
+            <textarea
+              disabled={!isLoaded}
+              rows={3}
+              value={draft.footer?.description ?? ""}
+              onChange={(e) =>
+                setDraft((s) => ({ ...s, footer: { ...s.footer, description: e.target.value } }))
+              }
+              className="w-full p-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none"
+              placeholder="Texte de présentation dans le pied de page..."
+            />
+          </div>
+        </section>
       </form>
     </div>
   );

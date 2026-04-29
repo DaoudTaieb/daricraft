@@ -37,6 +37,10 @@ export async function PUT(req: Request) {
       facebook: normalizeUrl(String(body.social?.facebook ?? "")),
       linkedin: normalizeUrl(String(body.social?.linkedin ?? "")),
     },
+    footer: {
+      description: String(body.footer?.description ?? DEFAULT_SITE_SETTINGS.footer?.description).trim(),
+      logoUrl: String(body.footer?.logoUrl ?? DEFAULT_SITE_SETTINGS.footer?.logoUrl).trim(),
+    }
   };
 
   await writeSiteSettings(next);

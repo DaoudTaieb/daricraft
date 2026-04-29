@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { updateQuoteReply } from "@/lib/quotesStore.server";
-import { promises as fs } from "fs";
-import path from "path";
+import { put } from "@vercel/blob";
 import crypto from "crypto";
 
 export const runtime = "nodejs";
@@ -24,19 +23,18 @@ export async function POST(req: Request, { params }: { params: any }) {
   }
 
   const replyImages: string[] = [];
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  await fs.mkdir(uploadDir, { recursive: true });
 
   for (const [key, value] of formData.entries()) {
     if (key === "replyImages" && value instanceof Blob) {
       const file = value as File;
       if (file.size > 0) {
-        const buffer = Buffer.from(await file.arrayBuffer());
         const ext = file.name.split('.').pop() || "png";
         const fileName = `${crypto.randomUUID()}.${ext}`;
-        const filePath = path.join(uploadDir, fileName);
-        await fs.writeFile(filePath, buffer);
-        replyImages.push(`/uploads/${fileName}`);
+        
+        const blob = await put(`replies/${fileName}`, file, {
+          access: 'public',
+        });
+        replyImages.push(blob.url);
       }
     }
   }

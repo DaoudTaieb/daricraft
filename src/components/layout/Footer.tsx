@@ -7,6 +7,7 @@ export async function Footer() {
     const settings = await readSiteSettings();
     const { addressLine, phone, email } = settings.contact;
     const { instagram, facebook, linkedin } = settings.social;
+    const { description, logoUrl } = settings.footer || DEFAULT_SITE_SETTINGS.footer!;
 
     return (
         <footer className="bg-primary text-primary-foreground pt-16 pb-8">
@@ -16,7 +17,7 @@ export async function Footer() {
                     <div className="space-y-4">
                         <div className="inline-flex">
                             <Image
-                                src="/daricraft-logo.svg"
+                                src={logoUrl || "/daricraft-logo.svg"}
                                 alt="DariCraft"
                                 width={260}
                                 height={70}
@@ -25,8 +26,7 @@ export async function Footer() {
                             />
                         </div>
                         <p className="text-primary-foreground/80 text-sm leading-relaxed">
-                            L&apos;esprit du design, le savoir-faire artisanal.
-                            Création de mobilier sur mesure et décoration unique pour votre intérieur.
+                            {description}
                         </p>
                     </div>
 
