@@ -1,4 +1,4 @@
-import { kv } from "@vercel/kv";
+import { Redis } from "@upstash/redis";
 import crypto from "crypto";
 
 export type QuoteStatus = "PENDING" | "CONTACTED" | "COMPLETED";
@@ -18,20 +18,25 @@ export type StoredQuote = {
   createdAt: string;
 };
 
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL || "",
+  token: process.env.KV_REST_API_TOKEN || "",
+});
+
 const KV_KEY = "daricraft_quotes";
 
 export async function readQuotes(): Promise<StoredQuote[]> {
   try {
-    const quotes = await kv.get<StoredQuote[]>(KV_KEY);
+    const quotes = await redis.get<StoredQuote[]>(KV_KEY);
     return quotes || [];
   } catch (error) {
-    console.error("KV Read Error:", error);
+    console.error("Redis Read Error:", error);
     return [];
   }
 }
 
 export async function writeQuotes(quotes: StoredQuote[]): Promise<void> {
-  await kv.set(KV_KEY, quotes);
+  await redis.set(KV_KEY, quotes);
 }
 
 export async function createQuote(input: {

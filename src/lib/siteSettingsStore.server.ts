@@ -1,4 +1,4 @@
-import { kv } from "@vercel/kv";
+import { Redis } from "@upstash/redis";
 
 export type SiteSettings = {
   contact: {
@@ -34,12 +34,16 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   }
 };
 
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL || "",
+  token: process.env.KV_REST_API_TOKEN || "",
+});
+
 const SETTINGS_KEY = "daricraft_site_settings";
 
 export async function readSiteSettings(): Promise<SiteSettings> {
   try {
-    const settings = await kv.get<SiteSettings>(SETTINGS_KEY);
-    // Merge with defaults to ensure all fields exist
+    const settings = await redis.get<SiteSettings>(SETTINGS_KEY);
     return {
       ...DEFAULT_SITE_SETTINGS,
       ...settings,
@@ -53,5 +57,5 @@ export async function readSiteSettings(): Promise<SiteSettings> {
 }
 
 export async function writeSiteSettings(next: SiteSettings): Promise<void> {
-  await kv.set(SETTINGS_KEY, next);
+  await redis.set(SETTINGS_KEY, next);
 }
